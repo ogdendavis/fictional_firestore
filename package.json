@@ -1,0 +1,17 @@
+{
+  "name": "fictional_characters",
+  "version": "0.0.1",
+  "description": "Testing out Firestore with a fictional characters API",
+  "private": true,
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lucas Ogden-Davis",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "firebase": "^8.3.0"
+  }
+}
