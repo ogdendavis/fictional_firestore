@@ -1,0 +1,8 @@
+.cardCollection {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 0 auto;
+  max-width: 940px;
+}

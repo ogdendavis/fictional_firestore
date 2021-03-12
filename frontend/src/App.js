@@ -1,31 +1,27 @@
-import logo from './logo.svg';
+import React from 'react';
+import { useState, useEffect } from 'react';
+
 import './App.css';
 
-function App() {
-  // Make sure Express app is runnin on port 3003
+import CardCollection from './components/CardCollection';
+
+const App = () => {
+  // Make sure Express app is runnin on port 3003 before starting
   const API_BASE = 'http://localhost:3003';
-  fetch(API_BASE)
-    .then(res => res.json())
-    .then(j => console.log(j));
+
+  // State to hold all characters
+  const [chars, setChars] = useState([]);
+
+  // Populate characters on load
+  useEffect(() => {
+    fetch(API_BASE)
+      .then(res => res.json())
+      .then(j => setChars(j));
+  }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <div className="app">{chars && <CardCollection allChars={chars} />}</div>
   );
-}
+};
 
 export default App;
