@@ -5,8 +5,9 @@ const env = process.env;
 
 // Express setup
 const express = require('express');
+const cors = require('cors');
 const app = express();
-const port = 3000;
+app.use(cors());
 
 // Load Firebase & Firestore
 const firebase = require('firebase/app');
@@ -42,6 +43,6 @@ app.get('/', (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log('Away we go!');
+app.listen(env.PORT, () => {
+  console.log(`Express server running on localhost:${env.PORT}`);
 });
