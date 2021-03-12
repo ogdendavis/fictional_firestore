@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 
 import CardCollection from './components/CardCollection';
+import AddForm from './components/AddForm';
 
 const App = () => {
   // Make sure Express app is runnin on port 3003 before starting
@@ -11,6 +12,14 @@ const App = () => {
 
   // State to hold all characters
   const [chars, setChars] = useState([]);
+
+  // State for form visibility
+  const [formVisible, setFormVisible] = useState(false);
+
+  // Helper function to toggle form visibility
+  const toggleForm = () => {
+    setFormVisible(!formVisible);
+  };
 
   // Populate characters on load
   useEffect(() => {
@@ -20,7 +29,10 @@ const App = () => {
   }, []);
 
   return (
-    <div className="app">{chars && <CardCollection allChars={chars} />}</div>
+    <div className="app">
+      {chars && <CardCollection allChars={chars} toggleForm={toggleForm} />}
+      <AddForm visible={formVisible} toggleForm={toggleForm} />
+    </div>
   );
 };
 

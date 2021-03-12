@@ -1,0 +1,29 @@
+.addForm {
+  background: linear-gradient(rgba(30, 30, 30, 0.5), rgba(30, 30, 30, 0.5));
+  display: none;
+  visibility: hidden;
+}
+
+.addForm--visible {
+  display: flex;
+  visibility: visible;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.addForm__inner {
+  background: white;
+  padding: 3rem;
+  z-index: 10;
+}
+
+.addForm__inner h2 {
+  margin-top: 0;
+  text-align: center;
+}
