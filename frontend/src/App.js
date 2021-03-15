@@ -88,12 +88,37 @@ const App = () => {
     });
   };
 
+  const deleteChar = data => {
+    // Double-check
+    if (window.confirm(`Are you sure you want to delete ${data.name}?`)) {
+      // Delete request with ID in body
+      fetch(API_BASE, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: data.id }),
+      }).then(res => {
+        // If res status indicates ok, update state
+        if (res.status === 200) {
+          // Filter out by ID
+          const newCharsArr = chars.filter(char => char.id !== data.id);
+          // Set state
+          setChars(newCharsArr);
+        }
+      });
+    }
+  };
+
   const handleForm = data => event => {
     // Prevent page reload on form submission
     event.preventDefault();
 
+    // TEMP - deletion request hits here with object {delete: true, id, name}
+    if (data.hasOwnProperty('delete') && data.delete) {
+      deleteChar(data);
+    }
+
     // If provided data has an id, we should be updating an existing character
-    if (data.hasOwnProperty('id')) {
+    else if (data.hasOwnProperty('id')) {
       updateChar(data);
     }
     // Otherwise, create new character

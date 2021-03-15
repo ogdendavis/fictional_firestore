@@ -113,6 +113,18 @@ const AddForm = ({ visible, toggleForm, handleForm, initialVals }) => {
             updateVal={handleInput('series')}
           />
           <button onClick={handleForm(vals)}>{buttonText}</button>
+          {initialVals.hasOwnProperty('id') && (
+            <button
+              className="button--delete"
+              onClick={handleForm({
+                delete: true,
+                id: vals.id,
+                name: vals.name,
+              })}
+            >
+              DELETE this character
+            </button>
+          )}
         </form>
       </div>
     </div>

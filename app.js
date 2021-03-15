@@ -109,6 +109,17 @@ app.listen(env.PORT, () => {
   console.log(`Express server running on localhost:${env.PORT}`);
 });
 
+// Delete an existing character
+app.delete('/', (req, res) => {
+  // TODO - again, checks
+
+  // Grab the document with .doc, and delete it!
+  chars
+    .doc(req.body.id)
+    .delete()
+    .then(ret => res.send(ret));
+});
+
 // Helper to convert flat req.body into proper shape for DB
 const convertBody = body => {
   return {
