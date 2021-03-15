@@ -73,20 +73,7 @@ app.post('/', (req, res) => {
   // TODO: check/sanitize data
 
   // Convert flat req.body into correct shape for DB
-  const charObj = {
-    name: req.body.name,
-    description: req.body.description,
-    image: req.body.image,
-    source: {
-      genre: req.body.genre,
-      series_world: req.body.series,
-      first_appearance: {
-        author: req.body.author,
-        date: req.body.date,
-        title: req.body.title,
-      },
-    },
-  };
+  const charObj = convertBody(req.body);
 
   // Use add method on collection reference
   chars.add(charObj).then(ref => {
@@ -101,6 +88,41 @@ app.post('/', (req, res) => {
   });
 });
 
+// Update an existing character
+app.put('/', (req, res) => {
+  // TODO: check/sanitize data
+
+  // Convert flat req.body into shape for DB
+  const charObj = convertBody(req.body);
+
+  // Use doc method on collection reference to get single document
+  chars
+    .doc(req.body.id)
+    .update(charObj)
+    .then(ret => {
+      // Just send default return for now - only status used on front end
+      res.send(ret);
+    });
+});
+
 app.listen(env.PORT, () => {
   console.log(`Express server running on localhost:${env.PORT}`);
 });
+
+// Helper to convert flat req.body into proper shape for DB
+const convertBody = body => {
+  return {
+    name: body.name,
+    description: body.description,
+    image: body.image,
+    source: {
+      genre: body.genre,
+      series_world: body.series,
+      first_appearance: {
+        author: body.author,
+        date: body.date,
+        title: body.title,
+      },
+    },
+  };
+};

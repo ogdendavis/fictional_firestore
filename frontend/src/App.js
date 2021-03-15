@@ -52,7 +52,40 @@ const App = () => {
 
   // Helper function to update existing character
   const updateChar = data => {
-    console.log(data);
+    // Send put request with data
+    // TODO: sanitization/checking
+    fetch(API_BASE, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }).then(res => {
+      // If good status gode, update state
+      if (res.status === 200) {
+        // Data is flat object sent with request
+        // Reshape for state
+        const reshaped = {
+          id: data.id,
+          name: data.name,
+          description: data.description,
+          image: data.image,
+          source: {
+            genre: data.genre,
+            series_world: data.series,
+            first_appearance: {
+              author: data.author,
+              date: data.date,
+              title: data.title,
+            },
+          },
+        };
+
+        // Get a copy of state array, with old vals for updated char removed and replaced
+        const newCharsArr = chars.map(char =>
+          char.id === reshaped.id ? reshaped : char
+        );
+        setChars(newCharsArr);
+      }
+    });
   };
 
   const handleForm = data => event => {
