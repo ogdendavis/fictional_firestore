@@ -1,8 +1,8 @@
 import './Card.css';
 
-const Card = ({ data }) => {
+const Card = ({ data, toggleForm }) => {
   return (
-    <div className="card">
+    <div className="card" onClick={toggleForm(data)}>
       <div
         className="card__background"
         style={{ backgroundImage: `url(${data.image})` }}

@@ -19,11 +19,17 @@
 
 .addForm__inner {
   background: white;
-  padding: 3rem;
+  padding: 3rem 3rem 1.5rem;
   z-index: 10;
 }
 
 .addForm__inner h2 {
   margin-top: 0;
   text-align: center;
+}
+
+button {
+  display: block;
+  margin: 1.5rem auto 0;
+  font-size: 1rem;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import './AddForm.css';
 import Input from './Input';
@@ -16,17 +16,30 @@ const defaultVals = {
   series: '',
 };
 
-const AddForm = ({ visible, toggleForm, handleSubmit }) => {
-  const handleClick = e => {
-    // Close form if click is on background (not form itself)
-    if (e.target.classList.contains('addForm--visible')) {
-      toggleForm();
-    }
-  };
-
+const AddForm = ({ visible, toggleForm, handleForm, initialVals }) => {
   // State to handle form changes and submission
-  // TODO: update this to handle updating existing character
-  const [vals, setVals] = useState(defaultVals);
+  const [vals, setVals] = useState({});
+
+  useEffect(() => {
+    // If we have data in initial vals, use them to set vals
+    if (initialVals.hasOwnProperty('id')) {
+      // Reshape object, as DB format is different
+      setVals({
+        id: initialVals.id,
+        name: initialVals.name,
+        description: initialVals.description,
+        image: initialVals.image,
+        genre: initialVals.source.genre,
+        title: initialVals.source.first_appearance.title,
+        author: initialVals.source.first_appearance.author,
+        date: initialVals.source.first_appearance.date,
+        series: initialVals.source.series_world,
+      });
+    } else {
+      // Set default (empty) vals
+      setVals(defaultVals);
+    }
+  }, [visible, initialVals]);
 
   // Handler for individual field values
   const handleInput = prop => event => {
@@ -38,13 +51,24 @@ const AddForm = ({ visible, toggleForm, handleSubmit }) => {
     setVals(newVals);
   };
 
+  // Set title and button to reflect whether editing or adding
+  const [titleText, buttonText] = initialVals.hasOwnProperty('id')
+    ? [`Edit ${initialVals.name}`, `Submit edits`]
+    : ['Add a Character', 'Submit new character'];
+
   return (
     <div
       className={`addForm ${visible && 'addForm--visible'}`}
-      onClick={handleClick}
+      onClick={toggleForm({})}
     >
-      <div className="addForm__inner">
-        <h2>Add a Character</h2>
+      <div
+        className="addForm__inner"
+        onClick={event => {
+          // Stop event propagation to avoid toggleForm firing on parent div
+          event.stopPropagation();
+        }}
+      >
+        <h2>{titleText}</h2>
         <form className="addForm__form">
           <h3>Character Information</h3>
           <Input
@@ -88,7 +112,7 @@ const AddForm = ({ visible, toggleForm, handleSubmit }) => {
             fieldVal={vals.series}
             updateVal={handleInput('series')}
           />
-          <button onClick={handleSubmit(vals)}>Add Character</button>
+          <button onClick={handleForm(vals)}>{buttonText}</button>
         </form>
       </div>
     </div>

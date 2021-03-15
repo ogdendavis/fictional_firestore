@@ -34,16 +34,36 @@ const store = firebase.firestore();
 // Get reference to characters collection
 const chars = store.collection('characters');
 
+// Helper function to convert timestamp object to date string
+const makeDateString = stamp => {
+  const dateObj = new Date(stamp.seconds * 1000);
+  return `${
+    dateObj.getMonth() + 1
+  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+};
+
 // Get all chars for display
 app.get('/', (req, res) => {
   // Get method returns promise
   // data in snapshot.docs
   chars.get().then(snapshot => {
     // Array of objects
-    const data = snapshot.docs.map(d => ({
-      id: d.id,
-      ...d.data(),
-    }));
+    const data = snapshot.docs.map(d => {
+      // Grab data
+      const unpacked = d.data();
+
+      // We have a mix of strings and objects for date - stringify the objects!
+      const date =
+        typeof unpacked.source.first_appearance.date === 'string'
+          ? unpacked.source.first_appearance.date
+          : makeDateString(unpacked.source.first_appearance.date);
+      unpacked.source.first_appearance.date = date;
+
+      return {
+        id: d.id,
+        ...unpacked,
+      };
+    });
     res.send(data);
   });
 });
