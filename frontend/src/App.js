@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 
 import CardCollection from './components/CardCollection';
-import AddForm from './components/AddForm';
+import AddForm from './components/form';
 
 const App = () => {
   // Make sure Express app is runnin on port 3003 before starting
@@ -28,10 +28,34 @@ const App = () => {
       .then(j => setChars(j));
   }, []);
 
+  // Helper function to create new character
+  const createNewChar = data => event => {
+    // Prevent page reload on form submission
+    event.preventDefault();
+    // Send post request with data
+    // TODO: sanitization/checking
+    fetch(API_BASE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+      .then(res => res.json())
+      .then(charInDB => {
+        // Returns object as saved in DB -- add it to state!
+        setChars([...chars, charInDB]);
+        // And close the form
+        toggleForm();
+      });
+  };
+
   return (
     <div className="app">
       {chars && <CardCollection allChars={chars} toggleForm={toggleForm} />}
-      <AddForm visible={formVisible} toggleForm={toggleForm} />
+      <AddForm
+        visible={formVisible}
+        toggleForm={toggleForm}
+        handleSubmit={createNewChar}
+      />
     </div>
   );
 };

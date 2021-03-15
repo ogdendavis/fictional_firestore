@@ -1,11 +1,10 @@
 import './Card.css';
 
 const Card = ({ data }) => {
-  console.log(data);
   return (
-    <div class="card">
+    <div className="card">
       <div
-        class="card__background"
+        className="card__background"
         style={{ backgroundImage: `url(${data.image})` }}
       />
       <h2>{data.name}</h2>

@@ -3,11 +3,15 @@ require('dotenv').config();
 // Too lazy to  type
 const env = process.env;
 
-// Express setup
+// Express modules
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+
+// Express setup
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
 
 // Load Firebase & Firestore
 const firebase = require('firebase/app');
@@ -30,6 +34,7 @@ const store = firebase.firestore();
 // Get reference to characters collection
 const chars = store.collection('characters');
 
+// Get all chars for display
 app.get('/', (req, res) => {
   // Get method returns promise
   // data in snapshot.docs
@@ -40,6 +45,39 @@ app.get('/', (req, res) => {
       ...d.data(),
     }));
     res.send(data);
+  });
+});
+
+// Create a new character in database
+app.post('/', (req, res) => {
+  // TODO: check/sanitize data
+
+  // Convert flat req.body into correct shape for DB
+  const charObj = {
+    name: req.body.name,
+    description: req.body.description,
+    image: req.body.image,
+    source: {
+      genre: req.body.genre,
+      series_world: req.body.series,
+      first_appearance: {
+        author: req.body.author,
+        date: req.body.date,
+        title: req.body.title,
+      },
+    },
+  };
+
+  // Use add method on collection reference
+  chars.add(charObj).then(ref => {
+    // add returns document reference - use it to get & return saved data
+    ref.get().then(snap =>
+      res.send({
+        // Remember to get the id!
+        id: snap.id,
+        ...snap.data(),
+      })
+    );
   });
 });
 
