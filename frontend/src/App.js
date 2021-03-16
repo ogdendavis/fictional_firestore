@@ -7,8 +7,8 @@ import CardCollection from './components/CardCollection';
 import AddForm from './components/form';
 
 const App = () => {
-  // Make sure Express app is runnin on port 3003 before starting
-  const API_BASE = 'http://localhost:3003';
+  // "Production" API on Heroku
+  const API_BASE = 'https://fictional-characters.herokuapp.com/';
 
   // State to hold all characters
   const [chars, setChars] = useState([]);
